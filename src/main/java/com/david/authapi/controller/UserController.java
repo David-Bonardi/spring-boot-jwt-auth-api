@@ -5,7 +5,6 @@ import com.david.authapi.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 //Recebe requisições HTTP, extrai dados(@RequestBody), chama o Services e retorna uma reposta
 @RestController
@@ -24,12 +23,12 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> GetAll() {
+    public List<User> getAll() {
         return service.getUsers();
     }
 
     @GetMapping("/{id}")
-    public User GetById(@PathVariable Long id) {
+    public User getById(@PathVariable Long id) {
         return service.getByIdService(id);
     }
 
@@ -41,13 +40,5 @@ public class UserController {
     @PutMapping("/{id}")
     public User update(@PathVariable Long id, @RequestBody User updateUser) {
         return service.update(id, updateUser);
-    }
-
-    @PostMapping("/login")
-    public Map<String, String> login(@RequestBody User user) {
-
-        String token = service.login(user.getUsername(), user.getPassword());
-
-        return Map.of("token", token);
     }
 }
