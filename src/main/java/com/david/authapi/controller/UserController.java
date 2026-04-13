@@ -1,7 +1,11 @@
 package com.david.authapi.controller;
 
+import com.david.authapi.dto.CreateUserRequest;
+import com.david.authapi.dto.UpdateUserRequest;
+import com.david.authapi.dto.UserResponse;
 import com.david.authapi.model.User;
 import com.david.authapi.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,18 +22,26 @@ public class UserController {
     }
 
     @PostMapping
-    public User create(@RequestBody User user) {
-        return service.createUser( user);
+    public UserResponse create(@Valid @RequestBody CreateUserRequest request) {
+        User user = new User();
+        user.setUsername(request.getUsername());
+        user.setPassword(request.getPassword());
+
+        User savedUser = service.createUser(user);
+        return new UserResponse(savedUser.getId(), savedUser.getUsername()  );
     }
 
     @GetMapping
-    public List<User> getAll() {
-        return service.getUsers();
+    public List<UserResponse> getAll() {
+        return service.getUsers().stream()
+                .map(user -> new UserResponse(user.getId(), user.getUsername()))
+                .toList();
     }
 
     @GetMapping("/{id}")
-    public User getById(@PathVariable Long id) {
-        return service.getByIdService(id);
+    public UserResponse getById(@Valid @PathVariable Long id) {
+        User user = service.getByIdService(id);
+        return new UserResponse(user.getId(), user.getUsername());
     }
 
     @DeleteMapping("/{id}")
@@ -38,7 +50,12 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public User update(@PathVariable Long id, @RequestBody User updateUser) {
-        return service.update(id, updateUser);
+    public UserResponse update(@PathVariable Long id, @RequestBody UpdateUserRequest request) {
+        User user = new User();
+        user.setUsername(request.getUsername());
+        user.setPassword(request.getPassword());
+
+        User updated = service.update(id, user);
+        return new UserResponse(updated.getId(), updated.getUsername());
     }
 }

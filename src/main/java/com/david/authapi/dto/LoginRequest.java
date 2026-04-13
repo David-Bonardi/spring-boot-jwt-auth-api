@@ -1,7 +1,11 @@
 package com.david.authapi.dto;
 
+import jakarta.validation.constraints.NotBlank;
+
 public class LoginRequest {
+    @NotBlank(message = "Usuário não pode ser vazio!")
     private String username;
+    @NotBlank(message = "Senha não pode ser vazia!")
     private String password;
 
     public String getPassword() {

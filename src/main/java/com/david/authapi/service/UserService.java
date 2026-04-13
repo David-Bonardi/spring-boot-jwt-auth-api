@@ -27,7 +27,7 @@ public class UserService {
     }
 
     public User getByIdService(Long id) {
-        return repo.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        return repo.findById(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
     }
 
     public void delete(Long id) {
@@ -35,7 +35,7 @@ public class UserService {
     }
 
     public User update(long id, User updateUser) {
-        User user = repo.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        User user = repo.findById(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
 
         user.setUsername(updateUser.getUsername());
         user.setPassword(encoder.encode(updateUser.getPassword()));
@@ -45,9 +45,9 @@ public class UserService {
 
     public String login(String username, String password) {
         User user = repo.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("Invalid credentials"));
+                .orElseThrow(() -> new RuntimeException("Dados Inválidos!"));
         if(!encoder.matches(password, user.getPassword())){
-            throw new RuntimeException("Invalid credentials");
+            throw new RuntimeException("Dados Inválidos!");
         }
         return jwtService.generateToken(user.getUsername());
     }
